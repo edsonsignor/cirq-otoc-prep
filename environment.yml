@@ -1,0 +1,14 @@
+name: cirq-otoc-prep
+channels:
+  - conda-forge
+dependencies:
+  - python=3.11
+  - numpy
+  - pandas
+  - matplotlib
+  - jupyter
+  - pytest
+  - pip
+  - pip:
+      - cirq>=1.4
+
