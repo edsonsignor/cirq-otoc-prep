@@ -3,9 +3,9 @@ __pycache__/
 .pytest_cache/
 .ipynb_checkpoints/
 .venv/
+.venv311/
 venv/
 env/
 figures/*.png
 figures/*.pdf
 *.egg-info/
-

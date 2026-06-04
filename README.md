@@ -105,3 +105,5 @@ Day 14: Do a mock interview using `notes/interview_answers.md`. Commit: final st
 
 The examples here use local simulation with simple noise channels. Real Willow experiments require hardware access, calibration data, device-specific compilation, qubit selection, readout mitigation, control circuits, and experimental protocols beyond this repository.
 
+
+

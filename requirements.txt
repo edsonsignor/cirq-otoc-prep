@@ -1,7 +1,27 @@
-cirq>=1.4
+cirq>=1.5.0
+cirq-core>=1.5.0
+cirq-google>=1.5.0
+qsimcirq>=0.14.0
+absl-py>=1.0
+filelock>=3.0
 numpy>=1.24
+scipy>=1.11
+scikit-learn>=1.3
 pandas>=2.0
 matplotlib>=3.7
+Py-BOBYQA>=1.5
 jupyter>=1.0
+ipykernel>=6.29
 pytest>=8.0
 
+# Recirq OTOC note:
+# Recirq's setup currently installs dependencies for all experiment families,
+# including chemistry/fermion packages such as pyscf, fqe, ipie, and
+# openfermionpyscf. Those can fail on Windows because they may need compiled
+# native extensions. For Windows OTOC work, install the OTOC-safe dependencies
+# above, then install Recirq source without its global dependencies:
+#   pip install --no-deps git+https://github.com/quantumlib/recirq
+# Pip may still warn that Recirq is missing pyscf/fqe/etc.; that is expected
+# unless you use Recirq chemistry modules. Verify OTOC with:
+#   python -c "from recirq import otoc; print(otoc.build_otoc_circuits)"
+recirq @ git+https://github.com/quantumlib/recirq ; python_version < "3.12" and platform_system != "Windows"
