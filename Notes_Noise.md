@@ -34,3 +34,117 @@ The propability of the outcome k evaluated on the state $\rho$ is $p_k = Tr(M_k 
 - Selective measurement means keeping the state after the measurement and condition the circuit based on the outcome. The post-measurement state becomes $\rho = \rho_k' = (E_k \rho E_k^\dagger)/p_k$
 
 - Nonselective measurement means performing the measurement and discarding the result. The post-measurement state becomes $\rho_k' = \sum_k p_k \rho_k'$
+
+# Errors
+
+## Coherent error
+
+Systematic unitary mistake: $R(\theta + \epsilon) = R(\theta)R(\epsilon)$. Like an unwanted Hamiltonian term or a calibration offset (not random noise). 
+Ex: over- or under-rotations, unwated Z phases, residual two-qubit conidtional phase, wrong iSWAP angle, coherent crosstalk.
+Say identity apply a small error rotation $R_x(\epsilon)$, if n times $R_x(n\epsilon)$. The prob error is $\sim \sin^2{(n \epsilon/2)} \sim n^2\epsilon^2/4$
+
+$\rho \to R_x(\epsilon)\rho R_x^\dagger(\epsilon)$
+
+This can harm an echo because coherent errors can look like physical signal. However, its decay may contain strutured oscillations or calibration-dependent biases. 
+Say we want the gate $G$ but get a coherent error $E$, then $U = EG$. The echo becomes $U^\dagger U = E'G^\dagger EG$. The inverse is not the usual dagger rule, but another gate with another coherent error in general. For example, regardless the rotarion is $-\theta$ or $\theta$ the error is $+\epsilon$ meaning that a echo produces $2\epsilon$.  
+
+## Stochastic error
+
+While coherent errors create a systematic drift, stochastic error creates difussion. The trajectory becomes a probabilistic mixture rather than a single wrong trajectory.
+Ex: Pauli strochastic errors? Bit-flip errors $\mathcal{E}(\rho) = (1-p)\rho + p X\rho X$, Phase-flip errors $\mathcal{E}(\rho) = (1-p)\rho + p Z\rho Z$. Pure stochatisc errors (prob channels) random jumps and decoherence
+$P \sim n p$, where $p$ is the prob of the error to happen
+
+Phase-flip suppress coherences: Say
+$$ \rho= 
+\begin{pmatrix}
+a & c \\
+c* & b
+\end{pmatrix}
+$$ 
+then,
+$$ \mathcal{E}(\rho)= 
+\begin{pmatrix}
+a & (1-2p)c \\
+(1-2p)c* & b
+\end{pmatrix}
+$$ 
+for $p =1/2$, all coherences are gone. 
+
+Depolarizing noise:
+$\mathcal{E}(\rho) = (1-p)\rho + \frac{p}{3} (X\rho X + Y\rho Y + Z\rho Z)$
+which shrinks the bloch vector toward the center. 
+
+Using Puali basis a qubit is given by $\rho = \frac{1}{2}(I + r_x X + r_y Y + r_z Z)$, where $r_k = \langle K \rangle$, for $K = X, Y, Z$. Also 
+$$
+\rho = \frac{1}{2}\begin{pmatrix}
+1 + r_z & r_x - ir_y \\
+r_x + ir_y & 1 - r_z 
+\end{pmatrix}
+$$
+So, a Bit-flip makes $(r_x, r_y, r_z) \to (r_x, (1- 2p)r_y, (1- 2p) r_z)$ leaving X unchanged and shrinking y and z component. 
+A Phase-flip makes $(r_x, r_y, r_z) \to ((1- 2p)r_x, (1- 2p)r_y, r_z)$ leaving Z unchanged and shrinking x and y component. 
+Depolarizing channel makes $(r_x, r_y, r_z) \to (1- 4p/3)(r_x, r_y, r_z)$ shrinking x,y, and z component.
+
+We see Puali stochatic errors as the ideal signal times noise damping factor. $S_{measured} \approx F_{noise}S_{ideal}$
+
+## Pauli twirling
+
+Randomize the error frame of a gate. Random Pauli gate before and after the noisy operation - ideal gate unchanged but noise after averaging becomes simpler. 
+
+Make the error look like a stochastic Pauli channel. 
+
+For a pure noise channel $\mathcal{E}$, without the actual Gate, The pauli twirling averages the noise over random Paulis
+$$
+\mathcal{E}_{twirled}(\rho) = \frac{1}{|\mathcal{P}|} \sum_{P \in \mathcal{P}} P^\dagger \mathcal{E} (P \rho P^\dagger) P
+$$
+many off-diagonal/coherent components of the noise channel are averaged away, remaining Pauli-diagonal
+$$
+\mathcal{E}_{twirled}(\rho) = p_I \rho + p_X X\rho X + p_Y Y\rho Y + p_Z Z\rho Z
+$$
+a stochastic channel. 
+
+Ex: $R_z(\epsilon)\rho R_z^\dagger(\epsilon)$ makes $(r_x, r_y, r_z) \to (r_x cos(\epsilon) - r_y sin(\epsilon), r_x sin(\epsilon) + r_y cos(\epsilon), r_z)$. In the Pauli basis,
+$$
+R_z^{(twirled)}(\epsilon) = \begin{pmatrix}
+\cos \epsilon & -\sin \epsilon & 0 \\
+\sin \epsilon & \cos \epsilon & 0 \\
+0 & 0 & 1 \\
+\end{pmatrix}
+$$
+The Twriling change the coherent error to a stochastic error which is diaoginal in Pauli
+$$
+R_z(\epsilon) = \begin{pmatrix}
+\lambda_X & 0 & 0 \\
+0 & \lambda_Y & 0 \\
+0 & 0 & \lambda_Z \\
+\end{pmatrix}
+$$
+
+Ex: $\mathcal{E}(X) = R_z(\epsilon) X R_z^\dagger(\epsilon) = cos \epsilon X + sin \epsilon Y$
+We need first $PXP$: $IXI = X$, $XXX = X$, $YXY = -X$, $ZXZ = -X$ from 
+![alt text](image.png)
+
+Then, $\mathcal{E}(X)$ for each: $\mathcal{E}(IXI) = cos \epsilon X + sin \epsilon Y$, $\mathcal{E}(XXX) = cos \epsilon X + sin \epsilon Y$, $\mathcal{E}(YXY) = -cos \epsilon X - sin \epsilon Y$, $\mathcal{E}(ZXZ) = - cos \epsilon X - sin \epsilon Y$. 
+Then, $P\mathcal{E}(X)P$ for each: $I\mathcal{E}(IXI)I = cos \epsilon X + sin \epsilon Y$, $X\mathcal{E}(XXX)X = cos \epsilon X + sin \epsilon (-Y)$, $Y\mathcal{E}(YXY)Y = -cos \epsilon (-X) - sin \epsilon Y$, $Z\mathcal{E}(ZXZ)Z = - cos \epsilon (-X) - sin \epsilon (-Y)$.
+Adding everthing 
+
+$$
+\mathcal{E}_{twirled}(X) = \frac{1}{4}( cos \epsilon X + sin \epsilon Y + cos \epsilon X - sin \epsilon Y + cos \epsilon X - sin \epsilon Y + cos \epsilon X + sin \epsilon Y) = cos \epsilon X
+$$
+making diagonal as we wanted. The same can be done for $Y$ and $Z$. 
+
+Pauli twirling can be written as a superoperator, because $\mathcal{P} = P $
+
+
+However, we have to becareful when inserting the twirling for a gate we need to find the correct reverse Pauli. 
+Operationally: you need to find a compensanting pauli P' for the GP applied. Because we want $P'GP = G$, then $P' = GPG^\dagger$. 
+
+EX: $G = CZ$ and $P = X_1$. $CZ X_1 CZ = X_1 Z_2$. The compesating Pauli is different from the first Pauli. 
+
+It does not guarantee: removal of leakage, removal of non-Markovian drift, perfect depolarizing noise, that every experimental bias disappears. 
+
+## Non-Markovian error
+
+The noise has memory or changes over time. 
+
+Ex: Qubit freq drift during the exp., calibration over time, temperature or electronic errors, pulse, crosstalk on what the neighbohr did earlier, 1/f noise creating detunings, leakage affecting later gates. So $\{\mathcal{E_j}\}$ are not independent as a Markovian noise would be expected. $\mathcal{E_j} = \mathcal{E_j}(\text{previous gates, previous states, time, env})$  
