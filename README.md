@@ -55,7 +55,7 @@ pytest
 - `src/plotting.py`: Matplotlib plotting helpers.
 - `scripts/`: command-line entry points.
 - `notebooks/`: guided learning notebooks.
-- `notes/`: interview and physics summaries.
+- `notes/`: physics summaries.
 - `tests/`: minimal correctness checks.
 
 
