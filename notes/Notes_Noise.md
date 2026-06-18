@@ -18,6 +18,62 @@ $$
 \sum_k E_k^\dagger E_k = I
 $$
 
+Ex: Amplitude Damping ($T_1$)
+The prob of $|1\rangle$ decays to $|0\rangle$ is $\gamma = 1 - e^{\tau/T_1}$. The damping channel has the Kraus operators:
+
+$$
+E_0 = 
+\begin{pmatrix}
+1 & 0 \\
+0 & \sqrt{1-\gamma}
+\end{pmatrix}
+
+\quad \quad \quad
+
+E_1 = 
+\begin{pmatrix}
+0 & \sqrt{\gamma} \\
+0 & 0
+\end{pmatrix}
+$$
+The first channel becomes 
+$$
+E_0 \rho E_0^\dagger = 
+\begin{pmatrix}
+\rho_{00} & \sqrt{1-\gamma}\rho_{01} \\
+\sqrt{1-\gamma}\rho_{00} & (1-\gamma)\rho_{11}
+\end{pmatrix}
+$$
+which reduces the 11 population and the coherences. And the second channel 
+$$
+E_1 \rho E_1^\dagger = 
+\begin{pmatrix}
+\gamma \rho_{11} & 0 \\
+0 & 0
+\end{pmatrix}
+$$
+corrects the 00 population. The full channel becomes:
+$$
+\rho' = 
+\begin{pmatrix}
+\rho_{00}+\gamma \rho_{11} & \sqrt{1-\gamma}\rho_{01} \\
+\sqrt{1-\gamma}\rho_{00} & (1-\gamma)\rho_{11}
+\end{pmatrix}
+$$
+![alt text](image-1.png)
+
+just a physical explanation of the noise state comes from the decay probability to the enviroment, So we can write a pure state
+$$
+|\psi\rangle = \alpha |0\rangle + \beta |1\rangle \quad \to \quad |\psi\rangle = \alpha |0\rangle |E_0\rangle + \beta \sqrt{1-\gamma}|1\rangle|E_0\rangle + \beta \sqrt{\gamma}|0\rangle|E_1\rangle = |A\rangle|E_0\rangle +|B\rangle|E_1\rangle
+$$
+$$
+\rho_s = Tr_E(\rho) = \sum_{i=0}^1 \langle E_i|(|\psi\rangle\langle\psi|)|E_i\rangle = |A\rangle\langle A| + |B\rangle\langle B| = \begin{pmatrix}
+|\alpha|^2+\gamma |\beta|^2 & \sqrt{1-\gamma}\alpha\beta^* \\
+\sqrt{1-\gamma}\alpha^*\beta & (1-\gamma)|\beta|^2
+\end{pmatrix}
+$$
+
+
 ## Positive operator-valued measure (POVM)
 
 - The Kraus op. tells you what happens to the state in a branch k, but POVM element tells you the probability rule of that branch 
@@ -122,7 +178,7 @@ $$
 
 Ex: $\mathcal{E}(X) = R_z(\epsilon) X R_z^\dagger(\epsilon) = cos \epsilon X + sin \epsilon Y$
 We need first $PXP$: $IXI = X$, $XXX = X$, $YXY = -X$, $ZXZ = -X$ from 
-![alt text](image.png)
+![alt text](image2.png)
 
 Then, $\mathcal{E}(X)$ for each: $\mathcal{E}(IXI) = cos \epsilon X + sin \epsilon Y$, $\mathcal{E}(XXX) = cos \epsilon X + sin \epsilon Y$, $\mathcal{E}(YXY) = -cos \epsilon X - sin \epsilon Y$, $\mathcal{E}(ZXZ) = - cos \epsilon X - sin \epsilon Y$. 
 Then, $P\mathcal{E}(X)P$ for each: $I\mathcal{E}(IXI)I = cos \epsilon X + sin \epsilon Y$, $X\mathcal{E}(XXX)X = cos \epsilon X + sin \epsilon (-Y)$, $Y\mathcal{E}(YXY)Y = -cos \epsilon (-X) - sin \epsilon Y$, $Z\mathcal{E}(ZXZ)Z = - cos \epsilon (-X) - sin \epsilon (-Y)$.
@@ -148,3 +204,17 @@ It does not guarantee: removal of leakage, removal of non-Markovian drift, perfe
 The noise has memory or changes over time. 
 
 Ex: Qubit freq drift during the exp., calibration over time, temperature or electronic errors, pulse, crosstalk on what the neighbohr did earlier, 1/f noise creating detunings, leakage affecting later gates. So $\{\mathcal{E_j}\}$ are not independent as a Markovian noise would be expected. $\mathcal{E_j} = \mathcal{E_j}(\text{previous gates, previous states, time, env})$  
+
+
+How do you know the gates are good?
+
+- Gate fidelity: compare single-qubit and two-qubit gate error rates, especially entangling gates.
+- Readout error: measure assignment errors and consider readout mitigation.
+- Decoherence: check `T1`, `T2`, and whether circuit duration is short compared with coherence times.
+- Leakage: verify population is not leaving the computational subspace.
+- Calibration drift: repeat calibrations or benchmarks over time.
+- Crosstalk: check whether operations on one qubit disturb neighbors.
+- Qubit selection: prefer connected qubits with strong two-qubit gates and stable readout.
+- Circuit depth: compare expected signal with accumulated error budget.
+- Control circuits: run identity echoes, no-perturbation echoes, randomized controls, and noise-only baselines.
+- Statistical uncertainty: use enough shots and report error bars.

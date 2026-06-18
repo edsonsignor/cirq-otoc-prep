@@ -24,4 +24,23 @@ Ex: $U = G_3 G_2 G_1$, $U_{folded} = G_3 (G_2 G_2^\dagger G_2) G_1$
 
 To quantify $\lambda$, we basically assume gate count. Idle errors, leakage, readout, crosstalk 
 
-- Statistical errors are small enough to make the fit meaningful.   
+- Statistical errors are small enough to make the fit meaningful.  
+
+- FOlding amplifies: gate errors, decoherence, leakage accumation but not erros from final readout and state-preparation
+$$
+O(\lambda) = O_{gate-noise}(\lambda) + O_{readout-prep}
+$$
+
+
+## Floquet calibration
+
+Similar idea to the ZNE, but it is a calibration technique to the hardware for coherent FSim/iSWAP parameters. It repeats the gate to amplify the error and fit the effective gate parameters. 
+
+FSim - Fermionic simulation gate
+
+$FSim(\theta, \phi) = iSWAP^{-2\theta/\pi}CZPorGate(exponent=-\phi/\pi)$ where $\theta$ controls $|10\rangle \leftrightarrow |01\rangle$ and $\phi$ controls conditional phase on $|11\rangle$.
+![alt text](image.png)
+
+PhasedFsim has additional parameters for adjusting local Z-rotations. 
+
+Since the error is coherent the amplified error accumalates into a measurable osciilation or phase shift.
