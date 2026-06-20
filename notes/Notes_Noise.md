@@ -149,6 +149,8 @@ Randomize the error frame of a gate. Random Pauli gate before and after the nois
 
 Make the error look like a stochastic Pauli channel. 
 
+For an ideal gate G, the ideal opation $\rho \to G\rho G^\dagger$. Since we insert before and after a Pauli, we need this operation to preserve the G operation. First, $G P \rho P^\dagger G^\dagger$, then we need to find the pauli Q which $Q G P = G \to Q = G P\dagger G^\dagger$. Finally, $Q G P \rho P^\dagger G^\dagger Q^\dagger$. Now, including noise $\mathcal{E}(G \rho G^\dagger )$, then $Q \mathcal{E}(G P \rho P^\dagger G^\dagger) Q^\dagger$.
+
 For a pure noise channel $\mathcal{E}$, without the actual Gate, The pauli twirling averages the noise over random Paulis
 $$
 \mathcal{E}_{twirled}(\rho) = \frac{1}{|\mathcal{P}|} \sum_{P \in \mathcal{P}} P^\dagger \mathcal{E} (P \rho P^\dagger) P
@@ -161,7 +163,7 @@ a stochastic channel.
 
 Ex: $R_z(\epsilon)\rho R_z^\dagger(\epsilon)$ makes $(r_x, r_y, r_z) \to (r_x cos(\epsilon) - r_y sin(\epsilon), r_x sin(\epsilon) + r_y cos(\epsilon), r_z)$. In the Pauli basis,
 $$
-R_z^{(twirled)}(\epsilon) = \begin{pmatrix}
+R_z^{(before twirled)}(\epsilon) = \begin{pmatrix}
 \cos \epsilon & -\sin \epsilon & 0 \\
 \sin \epsilon & \cos \epsilon & 0 \\
 0 & 0 & 1 \\
@@ -169,7 +171,7 @@ R_z^{(twirled)}(\epsilon) = \begin{pmatrix}
 $$
 The Twriling change the coherent error to a stochastic error which is diaoginal in Pauli
 $$
-R_z(\epsilon) = \begin{pmatrix}
+R_z^{(twirled)}(\epsilon) = \begin{pmatrix}
 \lambda_X & 0 & 0 \\
 0 & \lambda_Y & 0 \\
 0 & 0 & \lambda_Z \\
@@ -178,9 +180,11 @@ $$
 
 Ex: $\mathcal{E}(X) = R_z(\epsilon) X R_z^\dagger(\epsilon) = cos \epsilon X + sin \epsilon Y$
 We need first $PXP$: $IXI = X$, $XXX = X$, $YXY = -X$, $ZXZ = -X$ from 
+
 ![alt text](image2.png)
 
 Then, $\mathcal{E}(X)$ for each: $\mathcal{E}(IXI) = cos \epsilon X + sin \epsilon Y$, $\mathcal{E}(XXX) = cos \epsilon X + sin \epsilon Y$, $\mathcal{E}(YXY) = -cos \epsilon X - sin \epsilon Y$, $\mathcal{E}(ZXZ) = - cos \epsilon X - sin \epsilon Y$. 
+
 Then, $P\mathcal{E}(X)P$ for each: $I\mathcal{E}(IXI)I = cos \epsilon X + sin \epsilon Y$, $X\mathcal{E}(XXX)X = cos \epsilon X + sin \epsilon (-Y)$, $Y\mathcal{E}(YXY)Y = -cos \epsilon (-X) - sin \epsilon Y$, $Z\mathcal{E}(ZXZ)Z = - cos \epsilon (-X) - sin \epsilon (-Y)$.
 Adding everthing 
 
