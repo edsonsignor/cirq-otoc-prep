@@ -1,0 +1,149 @@
+5. What is your experience with Cirq?
+Answer cue:
+Be honest. Your Cirq experience is recent, but you have implemented toy echo circuits: random circuit U, mid-circuit measurement damage, U†, and probe recovery. Your stronger background is numerical quantum dynamics, so you can ramp quickly.
+
+11. What is a FOTOC?
+Answer cue:
+A fidelity out-of-time-order correlator. It is an echo-type diagnostic: evolve forward, apply a perturbation, evolve backward, and measure sensitivity to that perturbation.
+
+12. How is a FOTOC related to the Google protocol?
+Answer cue:
+Same skeleton: U, perturbation or measurement damage, U†, final recovery/sensitivity measurement. Different observable and platform, but similar diagnostic logic.
+
+13. What is the difference between a FOTOC and an OTOC?
+Answer cue:
+An OTOC is usually written as an operator correlator such as <W†(t) V† W(t) V>. A FOTOC is a fidelity/echo-based diagnostic, often state-dependent. They are not identical, but both probe perturbation growth, operator spreading, and scrambling-like behavior.
+
+============================================================
+3. Core project questions
+============================================================
+
+17. Explain the project protocol.
+Answer cue:
+Prepare a probe qubit in |1>, apply a random circuit U, introduce a local mid-circuit measurement/damage operation, apply U†, and measure the probe recovery probability. The goal is to distinguish classical-like memory loss around 1/2 from quantum scrambling/random-unitary behavior around 3/4.
+
+18. Why apply U†?
+Answer cue:
+It creates an echo. If there is no damage and no noise, U†U = I, so the initial information is recovered. Loss of recovery indicates damage, scrambling, or hardware imperfections.
+
+19. What is the difference between a no-damage echo and a damaged echo?
+Answer cue:
+No-damage echo tests reversal fidelity. Damaged echo tests how much a local perturbation or measurement affects globally scrambled information.
+
+20. Why is the mid-circuit measurement similar to a Pauli butterfly?
+Answer cue:
+If a Z-basis measurement outcome is discarded, the channel is:
+M_Z(rho) = P0 rho P0 + P1 rho P1 = 1/2 (rho + Z rho Z).
+So it is equivalent to averaging over no Pauli insertion and a Z insertion. It is OTOC-like, but still a non-unitary measurement channel.
+
+21. What is a Kraus operator?
+Answer cue:
+Kraus operators describe a general quantum channel:
+E(rho) = sum_k E_k rho E_k†,
+with completeness sum_k E_k† E_k = I.
+
+22. What is a POVM?
+Answer cue:
+A POVM describes measurement probabilities. The POVM element is M_k = E_k† E_k, and p_k = Tr(M_k rho).
+
+23. What is the difference between selective and nonselective measurement?
+Answer cue:
+Selective measurement conditions on a particular outcome. Nonselective measurement discards the outcome and averages over all outcomes, giving a quantum channel.
+
+24. What is a random circuit?
+Answer cue:
+A layered circuit with randomly chosen local gates and entangling gates. It is a controllable model of chaotic many-body dynamics.
+
+25. Is a random circuit Haar-random?
+Answer cue:
+Not at finite depth. A finite-depth random circuit can approximate Haar-like behavior for selected observables or low-order moments, but it is not literally Haar-random.
+
+26. What is a unitary design?
+Answer cue:
+An ensemble of unitaries that reproduces Haar averages up to a given moment/order. Random circuits can approximate low-order designs after sufficient depth.
+
+27. Why 1/2 classically and 3/4 quantum mechanically?
+Answer cue:
+Classically, strong damage/scrambling erases the probe memory, so the final measurement is a random bit: 1/2. Quantum mechanically, in the random-unitary/RMT regime, information is hidden nonlocally and the project observable has a universal partial recovery value around 3/4.
+
+28. What is an OTOC?
+Answer cue:
+An OTOC measures whether a time-evolved local operator has spread enough to fail to commute with another local operator. A standard form is <W†(t) V† W(t) V>.
+
+29. What is butterfly velocity?
+Answer cue:
+The speed at which the operator-spreading front moves through the system.
+
+30. What is the Lieb-Robinson bound?
+Answer cue:
+A locality bound showing that information/operator spreading in local quantum systems has an effective finite speed. It gives the light-cone intuition.
+
+31. What is light-cone pruning?
+Answer cue:
+Removing gates outside the causal cone of the measured observable because those gates cannot affect the observable at that depth. It is observable-aware simplification, not generic compilation.
+
+============================================================
+4. Hardware / noise / error mitigation questions
+============================================================
+
+32. What is Pauli twirling?
+Answer cue:
+It randomizes the error frame so coherent or structured errors become effectively stochastic Pauli-like errors after averaging. It does not remove the error; it changes the noise model.
+
+33. Why is coherent error dangerous?
+Answer cue:
+Coherent over-rotations can accumulate systematically across many gates, biasing the echo signal.
+
+34. Why is stochastic noise easier to handle?
+Answer cue:
+It is easier to average, model, and use in mitigation strategies such as zero-noise extrapolation.
+
+35. What is circuit folding?
+Answer cue:
+Replace U by logically equivalent longer circuits, such as U U† U, to amplify noise while preserving the ideal operation.
+
+36. What is zero-noise extrapolation?
+Answer cue:
+Measure the same observable at several effective noise levels and extrapolate back to the zero-noise limit.
+
+37. What are the caveats of ZNE?
+Answer cue:
+It assumes noise can be scaled in a controlled way and that the extrapolation model is valid over the sampled range. It does not by itself prove scrambling.
+
+38. Suppose the recovery is 0.62, not 0.75. What do you check?
+Answer cue:
+First check no-damage echo/reversal fidelity. Then readout and mid-circuit measurement fidelity. Then two-qubit gate errors/XEB on active qubit pairs. Then compare with noisy simulation and finite-depth/finite-size ideal simulations. Only after controls interpret it as physics.
+
+39. Suppose the no-damage echo is already bad. What does that mean?
+Answer cue:
+The issue is not scrambling yet. The forward-backward circuit is not being reversed well enough. Diagnose gate fidelity, calibration drift, decoherence, leakage, compilation/inversion errors.
+
+40. Suppose the signal goes below 1/2. What could that suggest?
+Answer cue:
+Coherent bias, readout asymmetry, postselection/conditioning effects, calibration problems, or a wrong observable definition. Do not immediately interpret it as physical scrambling.
+
+============================================================
+5. Project ownership / fit questions they may ask
+============================================================
+
+41. How would you start the project?
+Answer cue:
+First reproduce the ideal protocol in simulation, confirm observable definition and expected 3/4 value, then study finite-size/depth effects for N=9 and N=16, add noise models and controls, and then compare with hardware data.
+
+42. How would you ask busy people for help?
+Answer cue:
+Prepare short, specific questions with context. Attach the relevant plot/code snippet. State what you already tried. Ask for a concrete clarification or decision. Avoid vague requests.
+
+43. How do you handle ambiguous results?
+Answer cue:
+Separate possible explanations: observable definition, ideal finite-size/depth effects, noise, readout/measurement errors, gate errors, leakage, and data-processing mistakes. Design controls to eliminate them one by one.
+
+44. How independent are you?
+Answer cue:
+You are comfortable driving numerical work independently, but for hardware work you would check assumptions early: observable definition, circuit ensemble, controls, and analysis pipeline. After alignment, you can progress independently and bring concise updates.
+
+45. Tell me about a time you solved a difficult problem.
+Answer cue:
+Use HPC/numerical simulations: large Hilbert spaces, coupled KPO/open-system dynamics, convergence checks, memory/data management, distinguishing physical chaos/leakage from numerical artifacts.
+
+
